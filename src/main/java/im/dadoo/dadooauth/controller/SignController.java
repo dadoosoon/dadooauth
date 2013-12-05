@@ -22,4 +22,12 @@ public class SignController {
 			@RequestParam String password) {
 		return this.signService.signin(name, password);
 	}
+	
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	@ResponseBody
+	public User signup(@RequestParam String name, 
+			@RequestParam String email, @RequestParam String password) {
+		return this.signService.signup(name, email, password);
+	}
+	
 }
