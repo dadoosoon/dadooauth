@@ -18,6 +18,10 @@ public class User implements Serializable {
 	 * @since JDK 1.6 
 	 */
 	private static final long serialVersionUID = -4548165990598087189L;
+	
+	public static final Integer NORMAL = 0;
+	public static final Integer PREPARE = 1;
+	public static final Integer LOCK = 2;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,7 +40,7 @@ public class User implements Serializable {
 	private Long signupDatetime;
 	
 	@Column(nullable = false)
-	private Integer state;
+	private Integer state;//0正常，1待审核，2封禁
 	
 	public User() {}
 	
