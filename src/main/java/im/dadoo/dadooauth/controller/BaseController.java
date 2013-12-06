@@ -1,19 +1,21 @@
 package im.dadoo.dadooauth.controller;
 
+import im.dadoo.dadooauth.dto.DTException;
+import im.dadoo.dadooauth.exception.AuthException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 public class BaseController {
 	
-	@ExceptionHandler(NoSuchRequestHandlingMethodException.class)
+	@ExceptionHandler(AuthException.class)
 	@ResponseBody
-	public String handle404(NoSuchRequestHandlingMethodException ex, 
+	public DTException process(AuthException ex, 
 			HttpServletRequest req, HttpServletResponse res) {
-		res.setStatus(404);
-		return "404";
+		res.setStatus(ex.getStatus());
+		return ex.toDTO();
 	}
 }
