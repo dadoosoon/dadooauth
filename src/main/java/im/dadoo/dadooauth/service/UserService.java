@@ -61,6 +61,14 @@ public class UserService {
 		return user;
 	}
 	
+	public void deleteById(Integer id) {
+		User user = this.userDao.fetchById(id);
+		if (user == null) {
+			throw new AuthException(404, ExceptionCode.NOT_EXIST, "该用户不存在");
+		}
+		this.userDao.deleteById(id);
+	}
+	
 	public List<User> list() {
 		return this.userDao.list();
 	}

@@ -2,11 +2,8 @@ package im.dadoo.dadooauth.controller;
 
 import java.util.List;
 
-
-
 import im.dadoo.dadooauth.domain.User;
 import im.dadoo.dadooauth.exception.AuthException;
-import im.dadoo.dadooauth.exception.ExceptionCode;
 import im.dadoo.dadooauth.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +28,12 @@ public class UserController extends BaseController {
 		User user = null;
 		try {
 			user = this.userService.fetchById(id);
+			return user;
 		} catch (AuthException ex) {
 			ex.setUrl(String.format("/user/%s", id));
 			ex.setMethod("GET");
 			throw ex;
-		}
-		return user;
+		}		
 	}
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -51,6 +48,19 @@ public class UserController extends BaseController {
 				pagesize = DEFAULT_PAGESIZE;
 			}
 			return this.userService.list(pagecount, pagesize);
+		}
+	}
+	
+	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public Boolean delete(@PathVariable Integer id) throws AuthException {
+		try {
+			this.userService.deleteById(id);
+			return true;
+		} catch(AuthException ex) {
+			ex.setUrl(String.format("/user/%s", id));
+			ex.setMethod("DELETE");
+			throw ex;
 		}
 	}
 }

@@ -79,27 +79,28 @@ public class SignService {
 	
 	public User lock(Integer id) {
 		User user = this.userDao.fetchById(id);
-		if (user != null && user.getState() == User.NORMAL) {
-			user.setState(User.LOCK);
-			this.userDao.update(user);
-			return user;
+		if (user == null) {
+			throw new AuthException(404, ExceptionCode.NOT_EXIST, "该用户不存在");
 		}
-		else {
-			return null;
+		else if (user.getState() != User.NORMAL) {
+			throw new AuthException(400, ExceptionCode.WRONG_STATE, "该用户无法被锁定");
 		}
-		
+		user.setState(User.LOCK);
+		this.userDao.update(user);
+		return user;
+
 	}
 	
 	public User unlock(Integer id) {
 		User user = this.userDao.fetchById(id);
-		if (user != null && user.getState() == User.LOCK) {
-			user.setState(User.NORMAL);
-			this.userDao.update(user);
-			return user;
+		if (user == null) {
+			throw new AuthException(404, ExceptionCode.NOT_EXIST, "该用户不存在");
 		}
-		else {
-			return null;
+		if (user.getState() != User.LOCK) {
+			throw new AuthException(400, ExceptionCode.WRONG_STATE, "该用户无法被解锁");
 		}
-		
+		user.setState(User.NORMAL);
+		this.userDao.update(user);
+		return user;
 	}
 }
