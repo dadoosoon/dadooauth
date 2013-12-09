@@ -40,7 +40,8 @@ public class SignAspect {
 	@AfterReturning(value = "execution(public * im.dadoo.dadooauth.controller.SignController.verify(..))" + 
 													"execution(public * im.dadoo.dadooauth.controller.SignController.lock(..))" + 
 													"execution(public * im.dadoo.dadooauth.controller.SignController.unlock(..))" +
-													"execution(public * im.dadoo.dadooauth.controller.UserController.update(..))")
+													"execution(public * im.dadoo.dadooauth.controller.UserController.update(..))",
+													returning="user")
 	public void update(User user) 
 			throws JsonGenerationException, JsonMappingException, IOException {
 		if (this.jedis.exists(String.format("dadooauth:user:%d", user.getId()))) {

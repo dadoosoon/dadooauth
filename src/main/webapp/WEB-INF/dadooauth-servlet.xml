@@ -76,7 +76,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   
   <bean id="jedis" class="redis.clients.jedis.Jedis">
     <constructor-arg type="java.lang.String">
-      <value>localhost</value>
+      <value>202.114.18.242</value>
     </constructor-arg>
     <constructor-arg type="int">
       <value>6379</value>
