@@ -51,6 +51,19 @@ public class UserController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
+	@ResponseBody
+	public User update(@PathVariable Integer id, @RequestParam String name, 
+			@RequestParam String email, @RequestParam String password) throws AuthException {
+		try {
+			return this.userService.update(id, name, email, password, null);
+		} catch(AuthException ex) {
+			ex.setUrl(String.format("/user/%d", id));
+			ex.setMethod("PUT");
+			throw ex;
+		}
+	}
+	
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public Boolean delete(@PathVariable Integer id) throws AuthException {

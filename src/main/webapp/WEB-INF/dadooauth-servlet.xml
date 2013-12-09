@@ -72,6 +72,16 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   </bean>
   <tx:annotation-driven transaction-manager="transactionManager" /> 
 
+  <bean id="mapper" class="org.codehaus.jackson.map.ObjectMapper" />
+  
+  <bean id="jedis" class="redis.clients.jedis.Jedis">
+    <constructor-arg type="java.lang.String">
+      <value>localhost</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>6379</value>
+    </constructor-arg>
+  </bean>
 <!--   <mvc:interceptors>
     <mvc:interceptor>
       <mvc:mapping path="/**/" />

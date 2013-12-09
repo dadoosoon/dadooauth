@@ -1,6 +1,7 @@
 package im.dadoo.dadooauth.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,6 +56,15 @@ public class User implements Serializable {
 		return user;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("User={");
+		sb.append(String.format("id:%d,name=%s,email=%s,password=%s,signupDatetime=%tc,state=%d", 
+				id, name, email, password, signupDatetime, state));
+		sb.append("}");
+		return sb.toString();
+	}
+	
 	public Integer getId() {
 		return id;
 	}
