@@ -23,10 +23,10 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   </bean>
 
   <!-- 配置文件上传 -->
-  <bean id="multipartResolver" 
+<!--   <bean id="multipartResolver" 
     class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
     <property name="uploadTempDir" value="\upload\temp" />
-  </bean>
+  </bean> -->
   
   <bean id="dataSource"
     class="com.alibaba.druid.pool.DruidDataSource">
@@ -73,6 +73,11 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   <tx:annotation-driven transaction-manager="transactionManager" /> 
 
   <bean id="mapper" class="org.codehaus.jackson.map.ObjectMapper" />
+  <bean id="logSender" class="im.dadoo.dadooauth.log.LogSender">
+    <constructor-arg type="java.lang.String">
+      <value>http://localhost:33333/log</value>
+    </constructor-arg>
+  </bean>
   
   <bean id="jedis" class="redis.clients.jedis.Jedis">
     <constructor-arg type="java.lang.String">
