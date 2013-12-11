@@ -75,7 +75,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
   <bean id="mapper" class="org.codehaus.jackson.map.ObjectMapper" />
   <bean id="logSender" class="im.dadoo.dadooauth.log.LogSender">
     <constructor-arg type="java.lang.String">
-      <value>http://localhost:33333/log</value>
+      <value>http://logs.dadoo.im/log</value>
     </constructor-arg>
   </bean>
   
