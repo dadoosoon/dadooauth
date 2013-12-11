@@ -1,8 +1,12 @@
 package im.dadoo.dadooauth.aspect;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import im.dadoo.dadooauth.domain.User;
+import im.dadoo.dadooauth.log.AuthLog;
+import im.dadoo.dadooauth.log.LogSender;
 import im.dadoo.dadooauth.service.SignService;
 
 import org.aspectj.lang.annotation.AfterReturning;
@@ -23,6 +27,9 @@ public class SignAspect {
 	private SignService signService;
 	
 	@Autowired
+	private LogSender logSender;
+	
+	@Autowired
 	private Jedis jedis;
 	
 	@Autowired
@@ -32,9 +39,19 @@ public class SignAspect {
 			returning="user")
 	public void add(User user) 
 			throws JsonGenerationException, JsonMappingException, IOException {
-		String json = this.mapper.writeValueAsString(user);
-		System.out.println(json);
-		this.jedis.set(String.format("dadooauth:user:%d", user.getId()), json);
+		if (user != null) {
+			String json = this.mapper.writeValueAsString(user);
+			String key = "dadooauth:user:" + user.getId();
+			if (!this.jedis.exists(key)) {
+				Map<String, Object> content = new HashMap<String, Object>();
+				content.put("user", key);
+				content.put("signinDatetime", System.currentTimeMillis());
+				
+				AuthLog log = new AuthLog(content, AuthLog.TYPE_SIGN);
+				this.logSender.send(log);
+			}
+			this.jedis.set(key, json);
+		}
 	}
 	
 	@AfterReturning(value = "execution(public * im.dadoo.dadooauth.controller.SignController.verify(..))" + 

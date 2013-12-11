@@ -1,6 +1,10 @@
 package im.dadoo.dadooauth.aspect;
 
-import im.dadoo.dadooauth.service.FunLogService;
+import java.util.HashMap;
+import java.util.Map;
+
+import im.dadoo.dadooauth.log.AuthLog;
+import im.dadoo.dadooauth.log.LogSender;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,10 +22,9 @@ public class FunctionAspect {
 	private static final Logger logger = LoggerFactory.getLogger(FunctionAspect.class);
 	
 	@Autowired
-	private FunLogService flService;
+	private LogSender logSender;
 	
-	@Around("execution(public * im.dadoo.dadooauth.service..*.*(..)) "
-			+ "and not execution(public * im.dadoo.dadooauth.service.FunLogService.*(..)) ")
+	@Around("execution(public * im.dadoo.dadooauth.service..*.*(..)) ")
 	public Object logFun(ProceedingJoinPoint pjp) throws Throwable {
 		Long t1 = System.currentTimeMillis();
 		Object ret = pjp.proceed();
@@ -29,7 +32,15 @@ public class FunctionAspect {
 		String sig = pjp.getSignature().toLongString();
 		Object[] args = pjp.getArgs();
 		
-		this.flService.save(sig, args, ret, t2 - t1);
+		//发送到日志服务器
+		Map<String, Object> content = new HashMap<String, Object>();
+		content.put("functionName", sig);
+		content.put("args", args);
+		content.put("ret", ret);
+		content.put("time", t2 - t1);
+		AuthLog log = new AuthLog(content, AuthLog.TYPE_FUN, System.currentTimeMillis());
+		this.logSender.send(log);
+		
 		logger.info("函数信息:{}~~参数值:{}~~返回值:{}~~运行时间:{}", sig, args, ret, t2 - t1);
 		return ret;
 	}
